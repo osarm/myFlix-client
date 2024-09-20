@@ -1,43 +1,38 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MovieCard } from "../movie-card/movie-card";
 import { MovieView } from "../movie-view/movie-view";
 
 export const MainView = () => {
-  const [movies, setMovies] = useState([
-    {
-            id: 1,
-            title: "Scott Pilgrim vs. the World",
-            description:
-              "Based in Toronto, a man must defeat his new girlfriend's seven exes to win her heart.",
-            image: "https://media.themoviedb.org/t/p/w300_and_h450_bestv2/g5IoYeudx9XBEfwNL0fHvSckLBz.jpg",
-            genre: "Action",
-            director: "Edgar Wright"  
-        },
-        {
-            id: 2,
-            title: "Always Be My Maybe",
-            description:
-              "After 15 years, Marcus and Sasha reunite with a sense of old sparks of attraction but are now in two different worlds.",
-            image: "https://media.themoviedb.org/t/p/w300_and_h450_bestv2/3BO6pPa7qDcpPYct061Luh9fvst.jpg",
-            genre: "Romance",
-            director: "Nahnatchka Khan"  
-        },
-        {
-            id: 3,
-            title: "One Piece Film: Red",
-            description:
-              "Luffy and his crew head to a sonorous performance led by Uta - the most beloved singer in the New World.",
-            image: "https://media.themoviedb.org/t/p/w300_and_h450_bestv2/ogDXuVkO92GcETZfSofXXemw7gb.jpg",
-            genre: "Animation",
-            director: "Goro Taniguchi"  
-        }
-    ]);
+  const [movies, setMovies] = useState([]);
+  const [selectedMovie, setSelectedMovie] = useState(null);
 
-    const [selectedMovie, setSelectedMovie] = useState(null);
+  useEffect(() => {
+    fetch("https://movies-fx-6586d0468f8f.herokuapp.com/movies")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data); // Log fetched data
+        
+        const moviesFromApi = data.map((movie) => {
+          return {
+            _id: movie._id,
+            Title: movie.Title,
+            Description: movie.Description,
+            Genre: movie.Genre,
+            Director: movie.Director,
+            ImagePath: movie.ImagePath,
+            Featured: movie.Featured,
+          };
+        });
+  
+        setMovies(moviesFromApi);
+      })
+      .catch((error) => console.error('Error fetching movies:', error));
+  }, []);
 
     if (selectedMovie) {
       return (
-        <MovieView movie={selectedMovie} onBackClick={() => setSelectedMovie(null)} />
+        <MovieView movie={selectedMovie}
+         onBackClick={() => setSelectedMovie(null)} />
       );
     }
   
@@ -47,9 +42,10 @@ export const MainView = () => {
   
     return (
       <div>
+        {console.log(movies)} {/* Log movies array to ensure it's populated */}
         {movies.map((movie) => (
           <MovieCard
-            key={movie.id}
+            key={movie._id}
             movie={movie}
             onMovieClick={(newSelectedMovie) => setSelectedMovie(newSelectedMovie)}
           />

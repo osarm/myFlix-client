@@ -15,24 +15,23 @@ export const LoginView = ({ onLoggedIn }) => {
     fetch("https://movies-fx-6586d0468f8f.herokuapp.com/login", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data)  // Correctly send the data as JSON
     })
     .then((response) => response.json())
     .then((data) => {
       if (data.user && data.token) {
-        console.log("Login response: ", data);
-        localStorage.setItem("user", JSON.stringify(data.user)); // Save user in localStorage
-        localStorage.setItem("token", data.token);               // Save token in localStorage
-        onLoggedIn(data.user, data.token);                       // Call the onLoggedIn prop
+        localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("token", data.token);
+        onLoggedIn(data.user, data.token);
       } else {
         alert("No such user");
       }
     })
     .catch((e) => {
       console.error("Login error: ", e);
-      alert("Something went wrong");
+      alert("Login failed");
     });
   };
 

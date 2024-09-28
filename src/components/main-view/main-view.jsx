@@ -13,11 +13,19 @@ export const MainView = () => {
   const [user, setUser] = useState(storedUser);
   const [token, setToken] = useState(storedToken);
 
-  useEffect(() => {
-    if (!token) return;
+  console.log("Stored user:", storedUser); // Debug
+  console.log("Stored token:", storedToken); // Debug
+  console.log("Current user:", user); // Debug
 
+  useEffect(() => {
+    if (!token) {
+      console.log("No token found, not fetching movies."); // Debug
+      return;
+    }
+
+    console.log("Fetching movies with token:", token); // Debug
     fetch("https://movies-fx-6586d0468f8f.herokuapp.com/movies", {
-      headers: { Authorization: `Bearer ${token}` },  // Token is passed in header
+      headers: { Authorization: `Bearer ${token}` },
     })
       .then((response) => {
         if (!response.ok) {
@@ -26,6 +34,7 @@ export const MainView = () => {
         return response.json();
       })
       .then((data) => {
+        console.log("Movies fetched:", data); // Debug
         const moviesFromApi = data.map((movie) => ({
           _id: movie._id,
           Title: movie.Title,
@@ -47,18 +56,20 @@ export const MainView = () => {
     return <div>Error: {error}</div>;
   }
 
-  // Show login and signup views if not logged in
+  // If user is not logged in, show LoginView and SignupView
   if (!user) {
+    console.log("No user, showing login and signup views"); // Debug
     return (
       <>
         <h1>Welcome to myFlix</h1>
-        <LoginView 
+        <LoginView
           onLoggedIn={(user, token) => {
+            console.log("Logged in user:", user); // Debug
             setUser(user);
             setToken(token);
             localStorage.setItem("user", JSON.stringify(user));
             localStorage.setItem("token", token);
-          }} 
+          }}
         />
         <p>or</p>
         <SignupView />
@@ -68,9 +79,9 @@ export const MainView = () => {
 
   if (selectedMovie) {
     return (
-      <MovieView 
+      <MovieView
         movie={selectedMovie}
-        onBackClick={() => setSelectedMovie(null)} 
+        onBackClick={() => setSelectedMovie(null)}
       />
     );
   }
@@ -88,11 +99,15 @@ export const MainView = () => {
           onMovieClick={(newSelectedMovie) => setSelectedMovie(newSelectedMovie)}
         />
       ))}
-      <button onClick={() => { 
-        setUser(null); 
-        setToken(null); 
-        localStorage.clear(); // Clear stored user and token on logout
-      }}>Logout</button>
+      <button
+        onClick={() => {
+          setUser(null);
+          setToken(null);
+          localStorage.clear();
+        }}
+      >
+        Logout
+      </button>
     </div>
   );
 };

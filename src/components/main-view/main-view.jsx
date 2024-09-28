@@ -17,26 +17,24 @@ export const MainView = () => {
     if (!token) return;
 
     fetch("https://movies-fx-6586d0468f8f.herokuapp.com/movies", {
-      headers: { Authorization: `Bearer ${token}`},
+      headers: { Authorization: `Bearer ${token}` },  // Token is passed in header
     })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then((data) => {
-        console.log(data); // Log fetched data
-        
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
         const moviesFromApi = data.map((movie) => ({
-            _id: movie._id,
-            Title: movie.Title,
-            Description: movie.Description,
-            Genre: movie.Genre,
-            Director: movie.Director,
-            ImagePath: movie.ImagePath,
-            Featured: movie.Featured,
-          }));
+          _id: movie._id,
+          Title: movie.Title,
+          Description: movie.Description,
+          Genre: movie.Genre,
+          Director: movie.Director,
+          ImagePath: movie.ImagePath,
+          Featured: movie.Featured,
+        }));
         setMovies(moviesFromApi);
       })
       .catch((error) => {
@@ -46,45 +44,55 @@ export const MainView = () => {
   }, [token]);
 
   if (error) {
-    return <div>Error: {error}</div>
+    return <div>Error: {error}</div>;
   }
 
+  // Show login and signup views if not logged in
   if (!user) {
     return (
       <>
+        <h1>Welcome to myFlix</h1>
         <LoginView 
-        onLoggedIn={(user, token) => {
-          setUser(user);
-          setToken(token);
-        }} />
-        or
+          onLoggedIn={(user, token) => {
+            setUser(user);
+            setToken(token);
+            localStorage.setItem("user", JSON.stringify(user));
+            localStorage.setItem("token", token);
+          }} 
+        />
+        <p>or</p>
         <SignupView />
       </>
     );
   }
 
-    if (selectedMovie) {
-      return (
-        <MovieView movie={selectedMovie}
-         onBackClick={() => setSelectedMovie(null)} />
-      );
-    }
-  
-    if (movies.length === 0) {
-      return <div>The list is empty!</div>;
-    }
-  
+  if (selectedMovie) {
     return (
-      <div>
-        {console.log(movies)} {/* Log movies array to ensure it's populated */}
-        {movies.map((movie) => (
-          <MovieCard
-            key={movie._id}
-            movie={movie}
-            onMovieClick={(newSelectedMovie) => setSelectedMovie(newSelectedMovie)}
-          />
-        ))}
-        <button onClick={() => { setUser(null); setToken(null); localStorage.clear(); }}>Logout</button>
-      </div>
+      <MovieView 
+        movie={selectedMovie}
+        onBackClick={() => setSelectedMovie(null)} 
+      />
     );
-  };
+  }
+
+  if (movies.length === 0) {
+    return <div>The list is empty!</div>;
+  }
+
+  return (
+    <div>
+      {movies.map((movie) => (
+        <MovieCard
+          key={movie._id}
+          movie={movie}
+          onMovieClick={(newSelectedMovie) => setSelectedMovie(newSelectedMovie)}
+        />
+      ))}
+      <button onClick={() => { 
+        setUser(null); 
+        setToken(null); 
+        localStorage.clear(); // Clear stored user and token on logout
+      }}>Logout</button>
+    </div>
+  );
+};

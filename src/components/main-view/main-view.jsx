@@ -48,7 +48,7 @@ export const MainView = () => {
   }, [token]);
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div>Errorrrr: {error}</div>;
   }
 
   // If user is not logged in, show LoginView and SignupView

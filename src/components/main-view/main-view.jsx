@@ -13,17 +13,17 @@ export const MainView = () => {
   const [user, setUser] = useState(storedUser);
   const [token, setToken] = useState(storedToken);
 
-  console.log("Stored user:", storedUser); // Debug
-  console.log("Stored token:", storedToken); // Debug
-  console.log("Current user:", user); // Debug
+  console.log("Stored user:", storedUser);
+  console.log("Stored token:", storedToken);
+  console.log("Current user:", user);
 
   useEffect(() => {
     if (!token) {
-      console.log("No token found, not fetching movies."); // Debug
+      console.log("No token found, not fetching movies.");
       return;
     }
 
-    console.log("Fetching movies with token:", token); // Debug
+    console.log("Fetching movies with token:", token);
     fetch("https://movies-fx-6586d0468f8f.herokuapp.com/movies", {
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -34,7 +34,7 @@ export const MainView = () => {
         return response.json();
       })
       .then((data) => {
-        console.log("Movies fetched:", data); // Debug
+        console.log("Movies fetched:", data);
         const moviesFromApi = data.map((movie) => ({
           _id: movie._id,
           Title: movie.Title,
@@ -58,13 +58,13 @@ export const MainView = () => {
 
   // If user is not logged in, show LoginView and SignupView
   if (!user) {
-    console.log("No user, showing login and signup views"); // Debug
+    console.log("No user, showing login and signup views");
     return (
       <>
         <h1>Welcome to myFlix</h1>
         <LoginView
           onLoggedIn={(user, token) => {
-            console.log("Logged in user:", user); // Debug
+            console.log("Logged in user:", user);
             setUser(user);
             setToken(token);
             localStorage.setItem("user", JSON.stringify(user));
@@ -100,10 +100,10 @@ export const MainView = () => {
         />
       ))}
       <button
-        onClick={() => {
-          setUser(null);
-          setToken(null);
-          localStorage.clear();
+        onClick={() => { 
+          setUser(null); 
+          setToken(null); 
+          localStorage.clear(); 
         }}
       >
         Logout

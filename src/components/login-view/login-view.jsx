@@ -3,9 +3,10 @@ import React, { useState } from "react";
 export const LoginView = ({ onLoggedIn }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  
+
   const handleSubmit = (event) => { 
     event.preventDefault();
+    console.log("Login form submitted with:", { username, password });
 
     const data = {
       Username: username,
@@ -15,28 +16,36 @@ export const LoginView = ({ onLoggedIn }) => {
     fetch("https://movies-fx-6586d0468f8f.herokuapp.com/login", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify(data)  // Correctly send the data as JSON
+      body: JSON.stringify(data) // Correct body
     })
-    .then((response) => response.json())
+    .then((response) => {
+      console.log("Received response:", response);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
     .then((data) => {
+      console.log("Login response data:", data);
       if (data.user && data.token) {
         localStorage.setItem("user", JSON.stringify(data.user));
         localStorage.setItem("token", data.token);
         onLoggedIn(data.user, data.token);
       } else {
-        alert("No such user");
+        alert("Login failed: No such user or incorrect password");
       }
     })
     .catch((e) => {
       console.error("Login error: ", e);
-      alert("Login failed");
+      alert("Something went wrong");
     });
   };
 
   return (
     <form onSubmit={handleSubmit}>
+      <h2>Login</h2>
       <label>
         Username:
         <input

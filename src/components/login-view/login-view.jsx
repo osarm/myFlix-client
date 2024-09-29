@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
+import { useState } from "react";
 
 export const LoginView = ({ onLoggedIn }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  
+
   const handleSubmit = (event) => { 
     event.preventDefault();
+    console.log("Login form submitted with:", { username, password });
 
     const data = {
       Username: username,
@@ -19,25 +21,31 @@ export const LoginView = ({ onLoggedIn }) => {
       },
       body: JSON.stringify(data)
     })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.user && data.token) {
+      .then((response) => response.json())
+      .then((data) => {
         console.log("Login response: ", data);
-        localStorage.setItem("user", JSON.stringify(data.user)); // Save user in localStorage
-        localStorage.setItem("token", data.token);               // Save token in localStorage
-        onLoggedIn(data.user, data.token);                       // Call the onLoggedIn prop
-      } else {
-        alert("No such user");
-      }
-    })
-    .catch((e) => {
-      console.error("Login error: ", e);
-      alert("Something went wrong");
-    });
+        if (data.user) {
+          onLoggedIn(data.user, data.token);
+        } else {
+          alert("No such user");
+        }
+      })
+      .catch((e) => {
+        alert("Something went wrong");
+      });
   };
+  
+  if (data.user) {
+    localStorage.setItem("user", JSON.stringify(data.user));
+    localStorage.setItem("token", data.token);
+    onLoggedIn(data.user, data.token);
+  } else {
+    alert("No such user");
+  }
 
   return (
     <form onSubmit={handleSubmit}>
+      <h2>Login</h2>
       <label>
         Username:
         <input

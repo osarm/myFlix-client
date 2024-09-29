@@ -18,30 +18,29 @@ export const LoginView = ({ onLoggedIn }) => {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(data) // Correct body
+      body: JSON.stringify(data)
     })
-    .then((response) => {
-      console.log("Received response:", response);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then((data) => {
-      console.log("Login response data:", data);
-      if (data.user && data.token) {
-        localStorage.setItem("user", JSON.stringify(data.user));
-        localStorage.setItem("token", data.token);
-        onLoggedIn(data.user, data.token);
-      } else {
-        alert("Login failed: No such user or incorrect password");
-      }
-    })
-    .catch((e) => {
-      console.error("Login error: ", e);
-      alert("Something went wrong");
-    });
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Login response: ", data);
+        if (data.user) {
+          onLoggedIn(data.user, data.token);
+        } else {
+          alert("No such user");
+        }
+      })
+      .catch((e) => {
+        alert("Something went wrong");
+      });
   };
+  
+  if (data.user) {
+    localStorage.setItem("user", JSON.stringify(data.user));
+    localStorage.setItem("token", data.token);
+    onLoggedIn(data.user, data.token);
+  } else {
+    alert("No such user");
+  }
 
   return (
     <form onSubmit={handleSubmit}>

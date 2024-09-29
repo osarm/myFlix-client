@@ -27,12 +27,7 @@ export const MainView = () => {
     fetch("https://movies-fx-6586d0468f8f.herokuapp.com/movies", {
       headers: { Authorization: `Bearer ${token}` },
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((data) => {
         console.log("Movies fetched:", data);
         const moviesFromApi = data.map((movie) => ({
@@ -58,20 +53,13 @@ export const MainView = () => {
 
   // If user is not logged in, show LoginView and SignupView
   if (!user) {
-    console.log("No user, showing login and signup views");
     return (
       <>
-        <h1>Welcome to myFlix</h1>
-        <LoginView
-          onLoggedIn={(user, token) => {
-            console.log("Logged in user:", user);
-            setUser(user);
-            setToken(token);
-            localStorage.setItem("user", JSON.stringify(user));
-            localStorage.setItem("token", token);
-          }}
-        />
-        <p>or</p>
+        <LoginView onLoggedIn={(user, token) => {
+          setUser(user);
+          setToken(token);
+        }} />
+        or
         <SignupView />
       </>
     );
@@ -99,6 +87,7 @@ export const MainView = () => {
           onMovieClick={(newSelectedMovie) => setSelectedMovie(newSelectedMovie)}
         />
       ))}
+      
       <button
         onClick={() => { 
           setUser(null); 

@@ -78,6 +78,14 @@ export const MainView = () => {
     return <div>The list is empty!</div>;
   }
 
+  <BrowserRouter>
+  <Routes>
+    <Route path="/login" element={<LoginView onLoggedIn={this.onLoggedIn} />} />
+    <Route path="/signup" element={<SignupView />} />
+    <Route path="/" element={<MainView />} />
+  </Routes>
+</BrowserRouter>
+
   return (
     <div>
       {movies.map((movie) => (
@@ -100,3 +108,4 @@ export const MainView = () => {
     </div>
   );
 };
+

@@ -6,8 +6,8 @@ export const LoginView = ({ onLoggedIn }) => {
   const [password, setPassword] = useState("");
 
   const handleSubmit = (event) => { 
-    // prevents the default behavior of the form which is to reload the page
     event.preventDefault();
+    console.log("Login form submitted with:", { username, password });
 
     const data = {
       Username: username,

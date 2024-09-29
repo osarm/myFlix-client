@@ -24,7 +24,7 @@ export const MainView = () => {
     }
 
     console.log("Fetching movies with token:", token);
-    fetch("https://openlibrary.org/search.json?q=star+wars", {
+    fetch("https://movies-fx-6586d0468f8f.herokuapp.com/movies", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((response) => response.json())

@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 
 export const LoginView = ({ onLoggedIn }) => {
   const [username, setUsername] = useState("");
@@ -25,6 +24,11 @@ export const LoginView = ({ onLoggedIn }) => {
       .then((data) => {
         console.log("Login response: ", data);
         if (data.user) {
+          // Store user and token in localStorage
+          localStorage.setItem("user", JSON.stringify(data.user));
+          localStorage.setItem("token", data.token);
+
+          // Call onLoggedIn to update the main view
           onLoggedIn(data.user, data.token);
         } else {
           alert("No such user");
@@ -34,14 +38,6 @@ export const LoginView = ({ onLoggedIn }) => {
         alert("Something went wrong");
       });
   };
-  
-  if (data.user) {
-    localStorage.setItem("user", JSON.stringify(data.user));
-    localStorage.setItem("token", data.token);
-    onLoggedIn(data.user, data.token);
-  } else {
-    alert("No such user");
-  }
 
   return (
     <form onSubmit={handleSubmit}>

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { MovieCard } from "../movie-card/movie-card";
 import { MovieView } from "../movie-view/movie-view";
 import { LoginView } from "../login-view/login-view";
@@ -18,7 +17,6 @@ export const MainView = () => {
   console.log("Stored token:", storedToken);
   console.log("Current user:", user);
 
-  // Fetch movies if the token exists
   useEffect(() => {
     if (!token) {
       console.log("No token found, not fetching movies.");
@@ -53,90 +51,52 @@ export const MainView = () => {
     return <div>Error: {error}</div>;
   }
 
-  // Logout functionality
-  const handleLogout = () => {
-    setUser(null);
-    setToken(null);
-    localStorage.clear();
-  };
+  // If user is not logged in, show LoginView and SignupView
+  if (!user) {
+    return (
+      <>
+        <LoginView onLoggedIn={(user, token) => {
+          setUser(user);
+          setToken(token);
+        }} />
+        or
+        <SignupView />
+      </>
+    );
+  }
+
+  if (selectedMovie) {
+    return (
+      <MovieView
+        movie={selectedMovie}
+        onBackClick={() => setSelectedMovie(null)}
+      />
+    );
+  }
+
+  if (movies.length === 0) {
+    return <div>The list is empty!</div>;
+  }
 
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Main route for the movie list */}
-        <Route
-          path="/"
-          element={
-            user ? (
-              <>
-                {selectedMovie ? (
-                  <MovieView
-                    movie={selectedMovie}
-                    onBackClick={() => setSelectedMovie(null)}
-                  />
-                ) : (
-                  <div>
-                    {movies.length === 0 ? (
-                      <div>The list is empty!</div>
-                    ) : (
-                      movies.map((movie) => (
-                        <MovieCard
-                          key={movie._id}
-                          movie={movie}
-                          onMovieClick={(newSelectedMovie) =>
-                            setSelectedMovie(newSelectedMovie)
-                          }
-                        />
-                      ))
-                    )}
-                    <button onClick={handleLogout}>Logout</button>
-                  </div>
-                )}
-              </>
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
+    <div>
+      {movies.map((movie) => (
+        <MovieCard
+          key={movie._id}
+          movie={movie}
+          onMovieClick={(newSelectedMovie) => setSelectedMovie(newSelectedMovie)}
         />
-
-        {/* Login route */}
-        <Route
-          path="/login"
-          element={
-            user ? (
-              <Navigate to="/" />
-            ) : (
-              <LoginView
-                onLoggedIn={(user, token) => {
-                  setUser(user);
-                  setToken(token);
-                  localStorage.setItem("user", JSON.stringify(user));
-                  localStorage.setItem("token", token);
-                }}
-              />
-            )
-          }
-        />
-
-        {/* Signup route */}
-        <Route
-          path="/signup"
-          element={
-            user ? (
-              <Navigate to="/" />
-            ) : (
-              <SignupView
-                onSignedUp={(user, token) => {
-                  setUser(user);
-                  setToken(token);
-                  localStorage.setItem("user", JSON.stringify(user));
-                  localStorage.setItem("token", token);
-                }}
-              />
-            )
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+      ))}
+      
+      <button
+        onClick={() => { 
+          setUser(null); 
+          setToken(null); 
+          localStorage.clear(); 
+        }}
+      >
+        Logout
+      </button>
+    </div>
   );
 };

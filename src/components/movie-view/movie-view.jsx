@@ -1,37 +1,33 @@
-import React from "react";
-import PropTypes from "prop-types";
+import "./movie-view.scss";
+import Col from 'react-bootstrap/Col'
+import Row from "react-bootstrap/Row";
 
 export const MovieView = ({ movie, onBackClick }) => {
   return (
-    <div>
-      <h1>{movie.Title}</h1> {/* Show title */}
-      <p><strong>Director:</strong> {movie.Director.Name}</p> {/* Show director */}
-      <p><strong>Description:</strong> {movie.Description}</p> {/* Show description */}
-      <p><strong>Genre:</strong> {movie.Genre.Name}</p> {/* Show genre */}
-      <button onClick={onBackClick}>Back</button> {/* Back button */}
-    </div>
+    <Row className="justify-content-md-center mt-5">
+       <Col md={6}>
+        <img src={movie.image} />
+        </Col>
+      <Col md={6}>
+      <div>
+        <span>Title: </span>
+        <span>{movie.Title}</span>
+      </div>
+      <div>
+        <span>Description: </span>
+        <span>{movie.Description}</span>
+      </div>
+      <div>
+        <span>Director: </span>
+        <span>{movie.Director.Name}</span>
+      </div>
+      
+
+      <button 
+      onClick={onBackClick} className="back-button md={3}"
+      style={{ cursor: "pointer" }}
+      >Back</button>
+      </Col>
+    </Row>
   );
 };
-
-  MovieView.propTypes = {
-    movie: PropTypes.shape({
-      _id: PropTypes.string.isRequired,
-      Title: PropTypes.string.isRequired,
-      Description: PropTypes.string.isRequired,
-      Genre: PropTypes.shape({
-        Name: PropTypes.string.isRequired
-      })
-      .isRequired,
-      Director: PropTypes.shape({
-        Name: PropTypes.string.isRequired,
-        Bio: PropTypes.string,
-        Birth: PropTypes.string,
-        Death: PropTypes.string
-      })
-      .isRequired,
-      ImagePath: PropTypes.string.isRequired,
-      Featured: PropTypes.bool.isRequired
-    })
-    .isRequired,
-    onBackClick: PropTypes.func.isRequired
-  };

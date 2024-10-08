@@ -7,7 +7,6 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
   const handleProfileClick = (event) => {
     event.preventDefault(); // Prevent the default link behavior
     navigate(`/users/${encodeURIComponent(user._id)}`); // Navigate to the profile route
-    window.location.reload(); // Reload the page
   };
 
   return (

@@ -15,7 +15,7 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
         <Navbar.Brand as={Link} to="/" 
         // onClick={handleMovielistClick}
         >
-          MyFlixDB
+          MoviesFx
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">

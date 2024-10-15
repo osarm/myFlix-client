@@ -7,6 +7,7 @@ import { NavigationBar } from "../navigation-bar/navigation-bar";
 import { ProfileView } from "../profile-view/profile-view"; 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";  // Import Bootstrap form for search input
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 export const MainView = () => {
@@ -16,6 +17,7 @@ export const MainView = () => {
   const [error, setError] = useState(null);
   const [user, setUser] = useState(storedUser);
   const [token, setToken] = useState(storedToken);
+  const [searchQuery, setSearchQuery] = useState(""); // New state for search query
 
   useEffect(() => {
     if (!token) {
@@ -61,9 +63,9 @@ export const MainView = () => {
       console.error("User or movie data is missing.");
       return;
     }
-  
+
     fetch(`https://movies-fx-6586d0468f8f.herokuapp.com/users/${user.Username}/movies/${movieId}`, {
-      method: "PATCH", // Ensure method is PATCH
+      method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
@@ -84,7 +86,11 @@ export const MainView = () => {
         alert("Failed to add movie to favorites.");
       });
   };
-  
+
+  // Filter movies based on search query
+  const filteredMovies = movies.filter((movie) => 
+    movie.Title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   if (error) {
     return <div>Error: {error}</div>;
@@ -142,14 +148,23 @@ export const MainView = () => {
                 <Col>The list is empty</Col>
               ) : (
                 <>
-              {movies.map((movie) => (
-                <Col className="mb-4" key={movie._id} md={3}>
-                  <MovieCard movie={movie} onAddFavorite={handleAddFavorite} />
-                </Col>
-              ))}
-            </>
-          )
-        }
+                  <Col md={12} className="mb-4">
+                    {/* Search Input */}
+                    <Form.Control
+                      type="text"
+                      placeholder="Search for a movie"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)} // Update search query on input change
+                    />
+                  </Col>
+                  {filteredMovies.map((movie) => (
+                    <Col className="mb-4" key={movie._id} md={3}>
+                      <MovieCard movie={movie} onAddFavorite={handleAddFavorite} />
+                    </Col>
+                  ))}
+                </>
+              )
+            }
           />
           <Route
             path="/profile"

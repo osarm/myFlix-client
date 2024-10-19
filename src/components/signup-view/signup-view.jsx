@@ -3,13 +3,13 @@ import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
-export const SignupView = ({ onLoggedIn }) => { // Accept onLoggedIn as a prop
+export const SignupView = ({ onLoggedIn }) => {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [birthday, setBirthday] = useState("");
-  const [error, setError] = useState(""); // Initialize error state
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
@@ -33,7 +33,6 @@ export const SignupView = ({ onLoggedIn }) => { // Accept onLoggedIn as a prop
     })
       .then((response) => {
         if (response.ok) {
-          // Fetch user and token for auto-login
           return fetch("https://movies-fx-6586d0468f8f.herokuapp.com/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -51,14 +50,14 @@ export const SignupView = ({ onLoggedIn }) => { // Accept onLoggedIn as a prop
       })
       .then((loginResponse) => {
         if (loginResponse.ok) {
-          return loginResponse.json(); // Get user data and token after login
+          return loginResponse.json();
         } else {
           throw new Error("Auto-login failed after signup");
         }
       })
       .then(({ user, token }) => {
-        onLoggedIn(user, token); // Use onLoggedIn to log in the user and store data
-        navigate("/"); // Redirect to the movie list
+        onLoggedIn(user, token);
+        navigate("/");
       })
       .catch((error) => {
         setError(error.message);

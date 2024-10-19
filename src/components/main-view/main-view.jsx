@@ -58,7 +58,6 @@ export const MainView = () => {
     localStorage.clear();
   };
 
-  // Add movie to user's favorites
   const handleAddFavorite = (movieId) => {
     if (!user || !user.Username || !movieId) {
       console.error("User or movie data is missing.");
@@ -76,11 +75,11 @@ export const MainView = () => {
         if (!response.ok) {
           throw new Error("Failed to add movie to favorites");
         }
-        return response.json(); // Parse the updated user data
+        return response.json(); 
       })
       .then((updatedUser) => {
         alert("Movie added to favorites!");
-        console.log("Updated user:", updatedUser); // You can update user state if needed
+        console.log("Updated user:", updatedUser);
       })
       .catch((error) => {
         console.error("Error adding favorite:", error);
@@ -88,7 +87,6 @@ export const MainView = () => {
       });
   };
 
-  // Filter movies based on search query
   const filteredMovies = movies.filter((movie) => 
     movie.Title.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -123,7 +121,7 @@ export const MainView = () => {
           <Route
             path="/signup"
             element={
-              user ? <Navigate to="/" /> : <Col md={5}><SignupView /></Col>
+              user ? <Navigate to="/" /> : <Col md={5}><SignupView onLoggedIn={onLoggedIn} /></Col>
             }
           />
           <Route
@@ -150,12 +148,11 @@ export const MainView = () => {
               ) : (
                 <>
                   <Col md={12} className="mb-4">
-                    {/* Search Input */}
                     <Form.Control
                       type="text"
                       placeholder="Search for a movie"
                       value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)} // Update search query on input change
+                      onChange={(e) => setSearchQuery(e.target.value)}
                     />
                   </Col>
                   {filteredMovies.map((movie) => (

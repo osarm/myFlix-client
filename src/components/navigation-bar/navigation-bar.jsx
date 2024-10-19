@@ -13,7 +13,6 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
     <Navbar bg="dark" expand="lg">
       <Container>
         <Navbar.Brand as={Link} to="/" 
-        // onClick={handleMovielistClick}
         >
           MoviesFx
         </Navbar.Brand>
@@ -22,9 +21,6 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
           <Nav className="me-auto">
             {user && user._id && (
               <>
-                {/* <Nav.Link as={Link} to="/favoritemovies">
-                  Favorite Movies
-                </Nav.Link> */}
                 <Nav.Link
                   as={Link}
                   to={`/users/${encodeURIComponent(user._id)}`}

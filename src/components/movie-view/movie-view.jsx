@@ -9,7 +9,6 @@ export const MovieView = ({ movies }) => {
   const { movieId } = useParams();
   const movie = movies.find((b) => b._id === movieId)
 
-  // If no movie is found, show a message or navigate back
   if (!movie) {
     return <div>Movie not found</div>;
   }

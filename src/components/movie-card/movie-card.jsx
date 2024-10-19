@@ -5,9 +5,7 @@ import { Link } from "react-router-dom";
 
 export const MovieCard = ({ movie, onAddFavorite }) => {
   const handleAddFavorite = () => {
-    if (onAddFavorite) {
-      onAddFavorite(movie._id); // Ensure the correct ID is passed
-    }
+    onAddFavorite?.(movie._id)
   };
 
   return (
